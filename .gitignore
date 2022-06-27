@@ -1,3 +1,9 @@
+build
 cmake-build-debug
+CMakeFiles
+*.cmake
+Makefile
 .idea
+.vscode
 x64
+TransformCoordinate

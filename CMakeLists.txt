@@ -12,9 +12,11 @@ include_directories(${EIGEN3_INCLUDE_DIRS})
 find_package(PCL REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 
-find_package(Proj REQUIRED)
-include_directories(${PROJECT_SOURCE_DIR})
+# find_package(Proj REQUIRED)
+# include_directories(${PROJECT_SOURCE_DIR})
+include_directories(.)
 
 add_executable(TransformCoordinate
         main.cpp
+        Trajectory.cpp
         CoordinateSystemTrans.cpp)

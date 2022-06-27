@@ -1,20 +1,24 @@
 #pragma once
 #include <math.h>
 #include <limits>
+#include<cfloat>
+#include <iostream>
 //#include <proj/>
 
 const double PI = acos(-1.0);
-const double ee = 0.0066943799013;//wgs-84 ÍÖÇòµÚÒ»Æ«ÐÄÂÊÆ½·½;
-const double ee2 = 0.00673949674227;//wgs-84 ÍÖÇòµÚ¶þÆ«ÐÄÂÊÆ½·½;
-const double a = 6378137.0000000000;//wgs-84 ÍÖÇò³¤°ëÖá;
-const double b = 6356752.3142451795; //wgs-84 ÍÖÇò¶Ì°ëÖá
+const double ee = 0.0066943799013;//wgs-84 ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Æ«ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½;
+const double ee2 = 0.00673949674227;//wgs-84 
+const double a = 6378137.0000000000;//wgs-84 reference_ellipsoid_a;
+const double b = 6356752.3142451795; //wgs-84 reference_ellipsoid_b;
+const double f = 1.0/298.257223563;  // ellipsoid ratio
+const double k0 = 0.9996; // UTM scale on the central meridian
 
 /*
-// @brief: ½«wgs84 µØÐÄÖ±½Ç×ø±ê×ªÎªwgs84¾­Î³¶È
-(x, y, z) ÎªµØÐÄÖ±½Ç×ø±êÏµÏÂµÄ×ø±ê
-(reference_ellipsoid_a, reference_ellipsoid_b) Îª²Î¿¼ÍÖÇòµÄ³¤ÖáºÍ¶ÌÖá £¨£©
-epslon Îª²Ð²îÏµÊý
-(latitude, longitude, height) Îª×ª»»ºóµÄÎ³¶È¡¢¾­¶È¡¢´óµØ¸ß
+// @brief: ï¿½ï¿½wgs84 ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªÎªwgs84ï¿½ï¿½Î³ï¿½ï¿½
+(x, y, z) Îªï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½
+(reference_ellipsoid_a, reference_ellipsoid_b) Îªï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+epslon Îªï¿½Ð²ï¿½Ïµï¿½ï¿½
+(latitude, longitude, height) Îª×ªï¿½ï¿½ï¿½ï¿½ï¿½Î³ï¿½È¡ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ø¸ï¿½
 */
 bool ecef2lla(const double x, const double y, const double z,
 	const double reference_ellipsoid_a, const double reference_ellipsoid_b,
@@ -22,11 +26,18 @@ bool ecef2lla(const double x, const double y, const double z,
 	double& latitude, double& longitude, double& height);
 
 /*
-// @brief: ½«wgs84 ¾­Î³¶È´óµØ¸ß×ªÎªGussian Æ½ÃæÍ¶Ó°×ø±ê
-(latitude, longitude, height) Îª×ª»»ºóµÄÎ³¶È¡¢¾­¶È¡¢´óµØ¸ß
-centralLon ÎªÖÐÑë¾­ÏßµÄ¾­¶È
-(x, y, z) Îª¸ßË¹Í¶Ó°µÄÆ½Ãæ×ø±ê
+// @brief: ï¿½ï¿½wgs84 ï¿½ï¿½Î³ï¿½È´ï¿½Ø¸ï¿½×ªÎªGussian Æ½ï¿½ï¿½Í¶Ó°ï¿½ï¿½ï¿½ï¿½
+(latitude, longitude, height): 
+centralLon: central longitude for the point: ([l / 6] + 1) * 6 -3
+(x, y, z): utm coordinate 
 */
 void WGS84ToGauss3(const double latitude, const double longitude, const double height, 
 	const double &centralLon, 
 	double& utm_x, double& utm_y, double& utm_z);
+
+int calLongtitudinalZone(double lon);
+
+double calCentralMeridianLongtitude(int zone);
+
+void LongtitudeLatitude2UTM(const double latitude, const double longitude,
+							double& utm_x, double& utm_y);
